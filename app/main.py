@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
+
 from app.core.config import settings
 
 from app.api.portfolio import router as portfolio_router
@@ -8,14 +10,18 @@ from app.api.pnl import router as pnl_router
 
 from app.db.init_db import init_db
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup code
+    init_db()
+    yield
+    # Shutdown logic (optional for now)
+
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
+    lifespan=lifespan
 )
-
-@app.on_event("startup")
-def on_startup() -> None:
-    init_db()
 
 @app.get("/")
 def root() -> dict[str, str]:
