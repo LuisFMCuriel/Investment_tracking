@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column
 from app.db.base import Base
-
+from datetime import date
+from sqlalchemy import String, Float, Date
 class Transaction(Base):
     __tablename__ = "transactions"
 
