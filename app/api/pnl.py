@@ -4,7 +4,7 @@ from app.services.pnl_service import get_pnl_summary
 
 router = APIRouter(tags=["pnl"])
 
-@router.get("/pnl", respose_model=PnLSummary)
+@router.get("/pnl", response_model=PnLSummary)
 def read_pnl() -> PnLSummary:
     """
     Get the current PnL summary for the portfolio.
