@@ -10,6 +10,10 @@ app = FastAPI(
     version=settings.app_version,
 )
 
+@app.get("/")
+def root() -> dict[str, str]:
+    return {"message": "AI Portfolio Tracker API, hi"}
+
 app.include_router(health_router)
 app.include_router(portfolio_router)
 app.include_router(positions_router)
