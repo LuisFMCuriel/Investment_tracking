@@ -8,7 +8,7 @@ from app.api.health import router as health_router
 from app.api.positions import router as positions_router
 from app.api.pnl import router as pnl_router
 from app.api.transactions import router as transactions_router
-
+from app.api.imports import router as imports_router
 from app.db.init_db import init_db
 
 @asynccontextmanager
@@ -33,3 +33,4 @@ app.include_router(portfolio_router)
 app.include_router(positions_router)
 app.include_router(pnl_router)
 app.include_router(transactions_router)
+app.include_router(imports_router)

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-
+from sqlalchemy import desc
 from app.models.transaction import Transaction
 from app.schemas.transaction import TransactionCreate
 
@@ -22,3 +22,11 @@ def create_transaction(db: Session, transaction_in: TransactionCreate) -> Transa
     db.refresh(transaction)
 
     return transaction
+
+# latest transaction first, if same date then latest id first
+def get_transaction(db: Session) -> list[Transaction]:
+    return (
+        db.query(Transaction)
+        .order_by(desc(Transaction.transaction_date), desc(Transaction.id))
+        .all()
+    )

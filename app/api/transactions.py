@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.db.deps import get_db
 from app.schemas.transaction import TransactionCreate, TransactionRead
-from app.services.transaction_service import create_transaction
+from app.services.transaction_service import create_transaction, get_transaction
 
 router = APIRouter(tags=["transactions"])
 
@@ -19,3 +19,8 @@ def create_transaction_endpoint(
 ) -> TransactionRead:
     transaction = create_transaction(db, transaction_in)
     return transaction
+
+@router.get("/transactions", response_model=list[TransactionRead])
+def read_transactions_endpoint(db: Session = Depends(get_db)) -> list[TransactionRead]:
+    transactions = get_transaction(db)
+    return transactions
