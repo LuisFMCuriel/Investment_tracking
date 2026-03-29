@@ -1,10 +1,10 @@
 from datetime import date
 from pydantic import BaseModel, Field
-
+from app.schemas.enums import TransactionType
 # What client sends
 class TransactionCreate(BaseModel):
     symbol: str = Field(..., min_length=1, max_length=20)
-    transaction_type: str = Field(..., min_length=1, max_length=20)
+    transaction_type: TransactionType
     quantity: float = Field(..., gt=0)
     price: float = Field(..., gt=0)
     currency: str = Field(..., min_length=3, max_length=3)
