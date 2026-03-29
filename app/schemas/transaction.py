@@ -14,7 +14,7 @@ class TransactionCreate(BaseModel):
 class TransactionRead(BaseModel):
     id: int
     symbol: str
-    transaction_type: str
+    transaction_type: TransactionType
     quantity: float
     price: float
     currency: str
