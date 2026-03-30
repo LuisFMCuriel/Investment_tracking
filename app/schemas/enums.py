@@ -6,3 +6,6 @@ class TransactionType(str, Enum):
     DIVIDEND = "DIVIDEND"
     DEPOSIT = "DEPOSIT"
     WITHDRAWAL = "WITHDRAWAL"
+    INTEREST = "INTEREST"
+    REWARD = "REWARD"
+    DISTRIBUTION = "DISTRIBUTION"

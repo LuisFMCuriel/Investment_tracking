@@ -6,4 +6,6 @@ class ImportError(BaseModel):
 
 class ImportTransactionsResponse(BaseModel):
     created: int
+    skipped: int
     errors: list[ImportError]
+    

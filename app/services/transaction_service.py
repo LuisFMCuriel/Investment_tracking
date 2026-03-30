@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import desc
+from sqlalchemy import desc, select
 from app.models.transaction import Transaction
 from app.schemas.transaction import TransactionCreate
 
@@ -10,6 +10,7 @@ def create_transaction(db: Session, transaction_in: TransactionCreate) -> Transa
         transaction_type=transaction_in.transaction_type,
         quantity=transaction_in.quantity,
         price=transaction_in.price,
+        amount=transaction_in.amount,
         currency=transaction_in.currency,
         fees=transaction_in.fees,
         transaction_date=transaction_in.transaction_date,
@@ -24,9 +25,19 @@ def create_transaction(db: Session, transaction_in: TransactionCreate) -> Transa
     return transaction
 
 # latest transaction first, if same date then latest id first
-def get_transaction(db: Session) -> list[Transaction]:
-    return (
-        db.query(Transaction)
-        .order_by(desc(Transaction.transaction_date), desc(Transaction.id))
-        .all()
+def get_transactions(db: Session) -> list[Transaction]:
+    return db.query(Transaction).all()
+
+def transaction_exists(db: Session, transaction_in: TransactionCreate) -> bool:
+    stmt = select(Transaction).where(
+        Transaction.symbol == transaction_in.symbol,
+        Transaction.transaction_type == transaction_in.transaction_type,
+        Transaction.quantity == transaction_in.quantity,
+        Transaction.price == transaction_in.price,
+        Transaction.amount == transaction_in.amount,
+        Transaction.currency == transaction_in.currency,
+        Transaction.fees == transaction_in.fees,
+        Transaction.transaction_date == transaction_in.transaction_date,
     )
+    existing = db.execute(stmt).scalar_one_or_none()
+    return existing is not None
