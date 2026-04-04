@@ -8,7 +8,7 @@ class PnLSummary(BaseModel):
     total_return_pct: float
     currency: str
 
-class PnLRead(BaseModel):
+class PnlRead(BaseModel):
     symbol: str
     quantity: float
     average_cost: float
