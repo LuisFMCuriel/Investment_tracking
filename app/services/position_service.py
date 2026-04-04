@@ -14,31 +14,31 @@ def get_positions(db: Session) -> list[PositionRead]:
         # Here we are basically removing transactions like dividends, reward, distribution, etc.
         if not tx.symbol:
             continue
-        symbol = tx.symbol
+        key = (tx.symbol, tx.currency)
         quantity = tx.quantity or 0.0
         price = tx.price or 0.0
         fees = tx.fees or 0.0
 
         if tx.transaction_type == TransactionType.BUY:
-            positions[symbol]["quantity"] += quantity
-            positions[symbol]["total_cost"] += (quantity * price) + fees
+            positions[key]["quantity"] += quantity
+            positions[key]["total_cost"] += (quantity * price) + fees
         
         elif tx.transaction_type == TransactionType.SELL:
-            current_quantity = positions[symbol]["quantity"]
-            current_total_cost = positions[symbol]["total_cost"]
+            current_quantity = positions[key]["quantity"]
+            current_total_cost = positions[key]["total_cost"]
 
             if current_quantity <= 0:
                 continue
             average_cost = current_total_cost / current_quantity
-            positions[symbol]["quantity"] -= quantity
-            positions[symbol]["total_cost"] -= average_cost * quantity
+            positions[key]["quantity"] -= quantity
+            positions[key]["total_cost"] -= average_cost * quantity
 
-            if positions[symbol]["quantity"] < 0:
-                positions[symbol]["quantity"] = 0.0
-                positions[symbol]["total_cost"] = 0.0
+            if positions[key]["quantity"] < 0:
+                positions[key]["quantity"] = 0.0
+                positions[key]["total_cost"] = 0.0
 
     results = []
-    for symbol, data in positions.items():
+    for (symbol, currency), data in positions.items():
         quantity = data["quantity"]
         total_cost = data["total_cost"]
 
@@ -48,6 +48,7 @@ def get_positions(db: Session) -> list[PositionRead]:
         average_cost = total_cost / quantity if quantity > 0 else 0.0
         results.append(PositionRead(
             symbol=symbol,
+            currency=currency,
             quantity=round(quantity,6),
             average_cost=round(average_cost, 2),
             total_cost=round(total_cost, 2)
