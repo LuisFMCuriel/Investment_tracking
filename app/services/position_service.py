@@ -11,6 +11,7 @@ def get_positions(db: Session) -> list[PositionRead]:
     for tx in transactions:
         if tx.transaction_type not in {TransactionType.BUY, TransactionType.SELL}:
             continue
+        # Here we are basically removing transactions like dividends, reward, distribution, etc.
         if not tx.symbol:
             continue
         symbol = tx.symbol
