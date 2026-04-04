@@ -31,6 +31,7 @@ def get_pnl(db: Session) -> list[PnlRead]:
                 PnlRead(
                     symbol = pos.symbol,
                     quantity = pos.quantity,
+                    currency = pos.currency,
                     average_cost = round(pos.average_cost, 2),
                     current_price = round(current_price, 2),
                     market_value = round(market_value, 2),

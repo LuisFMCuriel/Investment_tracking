@@ -11,6 +11,7 @@ class PnLSummary(BaseModel):
 class PnlRead(BaseModel):
     symbol: str
     quantity: float
+    currency: str
     average_cost: float
     current_price: float
     market_value: float
