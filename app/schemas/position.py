@@ -11,6 +11,7 @@ class Position(BaseModel):
 
 class PositionRead(BaseModel):
     symbol: str
+    currency: str
     quantity: float
     average_cost: float
     total_cost: float
