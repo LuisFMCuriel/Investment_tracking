@@ -38,7 +38,19 @@ class TwelveDataProvider:
 
         return data
 
+    def is_supported_stock(self, symbol: str) -> bool:
+        data = self._get_json("stocks", {"symbol": symbol})
+        return bool(data.get("data"))
+
+    def is_supported_etf(self, symbol: str) -> bool:
+        data = self._get_json("etf", {"symbol": symbol})
+        return bool(data.get("data"))
+
     def get_price(self, symbol: str) -> MarketQuote:
+        # Validate symbol support before making multiple API calls
+        if not self.is_supported_stock(symbol) and not self.is_supported_etf(symbol):
+            raise ValueError(f"Unsupported Twelve Data symbol: {symbol}")
+
         # Lightweight latest-price endpoint
         price_data = self._get_json("price", {"symbol": symbol})
 

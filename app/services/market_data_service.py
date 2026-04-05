@@ -1,21 +1,35 @@
+from pydoc import resolve
 from app.services.providers.twelve_data_provider import TwelveDataProvider
 from app.schemas.market_data import MarketQuote
 from datetime import datetime, timedelta
+
+SYMBOL_MAP = {
+    # Lightyear/local symbol : Twelve Data symbol
+    "BRICEKSP": None,
+}
 
 class MarketDataService:
     def __init__(self) -> None:
         self.provider = TwelveDataProvider()
         self._cache: dict[str, tuple[datetime, MarketQuote]] = {}
         self.ttl = timedelta(minutes=120)  # Cache time-to-live
+    
+    def resolve_symbol(symbol: str) -> str | None:
+        if symbol in SYMBOL_MAP:
+            return SYMBOL_MAP[symbol]
+        return symbol
 
     def get_current_quote(self, symbol: str) -> MarketQuote:
+        resolved_symbol = self.resolve_symbol(symbol)
+        if resolved_symbol is None:
+            raise ValueError(f"No market-data mapping for symbol: {symbol}")
         now = datetime.utcnow()
         cached = self._cache.get(symbol)
         if cached:
             cached_at, quote = cached
             if now - cached_at < self.ttl:
                 return quote  # Return cached quote if still valid
-        quote = self.provider.get_price(symbol)
+        quote = self.provider.get_price(resolved_symbol)
         self._cache[symbol] = (now, quote)  # Cache the new quote
         return quote
 
