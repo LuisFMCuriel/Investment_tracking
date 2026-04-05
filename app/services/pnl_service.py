@@ -18,7 +18,7 @@ def get_pnl(db: Session) -> list[PnlRead]:
     positions = get_positions(db)
     results = []
     for pos in positions:
-        quote = market_data_service(pos.symbol)
+        quote = market_data_service.get_current_quote(pos.symbol)
 
         # Only compute when quote exists
         if not quote.price_available or quote.price is None:
@@ -63,10 +63,6 @@ def get_pnl(db: Session) -> list[PnlRead]:
         unrealized_pnl = market_value - pos.total_cost
         unrealized_pnl_percent = ((unrealized_pnl / pos.total_cost) * 100 if pos.total_cost > 0 else None)
         
-        current_price = get_current_price(pos.symbol)
-        market_value = pos.quantity * current_price
-        total_cost = pos.total_cost
-        unrealized_pnl = market_value - total_cost
 
         results.append(
             PnlRead(

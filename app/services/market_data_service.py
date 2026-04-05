@@ -19,7 +19,6 @@ class MarketDataService:
         self._cache[symbol] = (now, quote)  # Cache the new quote
         return quote
 
-market_data_service = MarketDataService()
 
 def get_current_price(symbol: str) -> float:
     # Placeholder implementation - replace with actual logic to fetch current price
@@ -47,3 +46,6 @@ def get_current_price(symbol: str) -> float:
 
     }
     return mock_prices.get(symbol.upper(), 100.00)  # Default to 100 if symbol not found)
+
+
+market_data_service = MarketDataService()
