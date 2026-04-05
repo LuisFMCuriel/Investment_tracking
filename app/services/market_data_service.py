@@ -1,6 +1,25 @@
+from app.services.providers.twelve_data_provider import TwelveDataProvider
+from app.schemas.market_data import MarketQuote
+from datetime import datetime, timedelta
 
+class MarketDataService:
+    def __init__(self) -> None:
+        self.provider = TwelveDataProvider()
+        self._cache: dict[str, tuple[datetime, MarketQuote]] = {}
+        self.ttl = timedelta(minutes=120)  # Cache time-to-live
 
+    def get_current_quote(self, symbol: str) -> MarketQuote:
+        now = datetime.utcnow()
+        cached = self._cache.get(symbol)
+        if cached:
+            cached_at, quote = cached
+            if now - cached_at < self.ttl:
+                return quote  # Return cached quote if still valid
+        quote = self.provider.get_price(symbol)
+        self._cache[symbol] = (now, quote)  # Cache the new quote
+        return quote
 
+market_data_service = MarketDataService()
 
 def get_current_price(symbol: str) -> float:
     # Placeholder implementation - replace with actual logic to fetch current price

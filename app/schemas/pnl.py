@@ -13,8 +13,11 @@ class PnlRead(BaseModel):
     quantity: float
     currency: str
     average_cost: float
-    current_price: float
-    market_value: float
+    current_price: float | None
+    market_value: float | None
     total_cost: float
-    unrealized_pnl: float
-    unrealized_pnl_percent: float
+    unrealized_pnl: float | None
+    unrealized_pnl_percent: float | None
+    price_available: bool
+    price_currency: str | None = None
+    provider: str | None = None
