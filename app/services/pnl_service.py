@@ -18,7 +18,26 @@ def get_pnl(db: Session) -> list[PnlRead]:
     positions = get_positions(db)
     results = []
     for pos in positions:
-        quote = market_data_service.get_current_quote(pos.symbol)
+        try:
+            quote = market_data_service.get_current_quote(pos.symbol)
+        except ValueError:
+            results.append(
+                PnlRead(
+                    symbol=pos.symbol,
+                    currency=pos.currency,
+                    quantity=round(pos.quantity, 6),
+                    average_cost=round(pos.average_cost, 2),
+                    current_price=None,
+                    market_value=None,
+                    total_cost=round(pos.total_cost, 2),
+                    unrealized_pnl=None,
+                    unrealized_pnl_percent=None,
+                    price_available=False,
+                    price_currency=None,
+                    provider="twelve_data",
+                )
+            )
+        continue
 
         # Only compute when quote exists
         if not quote.price_available or quote.price is None:
