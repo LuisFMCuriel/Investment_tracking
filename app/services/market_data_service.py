@@ -4,12 +4,6 @@ from app.services.providers.yahoo_finance_provider import YahooFinanceProvider
 from app.schemas.market_data import MarketQuote
 from datetime import datetime, timedelta
 
-
-SYMBOL_PROVIDER_MAP = {
-    "VUAA.MI": "yahoo",
-    "IWDA.AS": "yahoo",
-}
-
 SYMBOL_MAP = {
     # Lightyear/local symbol : Twelve Data symbol
     "BRICEKSP": None,
@@ -20,12 +14,13 @@ SYMBOL_MAP = {
     "DIS": "DIS",
     "BABA": "BABA",
     "NVDA": "NVDA",
-    "BRK.B": "BRKB",
+    "BRK.B": "BRK.B",
     "NFLX": "NFLX",
     "VUAA": "VUAA.DE",
     "TSLA": "TSLA",
     "GOOGL": "GOOGl",
     "EQQQ": "EQQQ.MI",
+    "IWDA": "IWDA.AS",
 
 }
 
