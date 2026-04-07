@@ -19,7 +19,7 @@ def get_pnl(db: Session) -> list[PnlRead]:
     results = []
     for pos in positions:
         try:
-            quote = market_data_service.get_current_quote(pos.symbol)
+            quote = market_data_service.get_current_quote(pos.symbol, pos.currency)
         except ValueError:
             results.append(
                 PnlRead(

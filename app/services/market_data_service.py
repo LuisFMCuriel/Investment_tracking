@@ -31,7 +31,7 @@ SYMBOL_MAP = {
 
 class MarketDataService:
     def __init__(self) -> None:
-        self.provider = TwelveDataProvider()
+        self.twelve_data = TwelveDataProvider()
         self.yahoo = YahooFinanceProvider()
         self._cache: dict[str, tuple[datetime, MarketQuote]] = {}
         self.ttl = timedelta(minutes=120)  # Cache time-to-live
@@ -41,7 +41,7 @@ class MarketDataService:
             return SYMBOL_MAP[symbol]
         return symbol
 
-    def get_current_quote(self, symbol: str) -> MarketQuote:
+    def get_current_quote(self, symbol: str, currency: str) -> MarketQuote:
         resolved_symbol = self.resolve_symbol(symbol)
         if resolved_symbol is None:
             raise ValueError(f"No market-data mapping for symbol: {symbol}")
@@ -53,9 +53,22 @@ class MarketDataService:
             if now - cached_at < self.ttl:
                 return quote  # Return cached quote if still valid
 
-        provider_name = self.get_provider_name(resolved_symbol)
+        if currency == "EUR":
+            quote = self.yahoo.get_price(resolved_symbol)
+        elif currency == "USD":
+            quote = self.twelve_data.get_price(resolved_symbol)
+        else:
+            print("There is a problem resolving {} with currency {}".format(symbol, currency))
+            return MarketQuote(
+                symbol =symbol,
+                price=None,
+                currency=currency,
+                exchange=None,
+                as_of =now,
+                provider=None,
+                price_available=False,
+                )
 
-        quote = self.provider.get_price(resolved_symbol)
         self._cache[symbol] = (now, quote)  # Cache the new quote
         return quote
 
