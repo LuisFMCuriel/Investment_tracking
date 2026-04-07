@@ -5,3 +5,4 @@ httpx
 sqlalchemy
 requests
 pydantic-settings
+yfinance

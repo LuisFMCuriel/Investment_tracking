@@ -1,16 +1,38 @@
 from pydoc import resolve
 from app.services.providers.twelve_data_provider import TwelveDataProvider
+from app.services.providers.yahoo_finance_provider import YahooFinanceProvider
 from app.schemas.market_data import MarketQuote
 from datetime import datetime, timedelta
+
+
+SYMBOL_PROVIDER_MAP = {
+    "VUAA.MI": "yahoo",
+    "IWDA.AS": "yahoo",
+}
 
 SYMBOL_MAP = {
     # Lightyear/local symbol : Twelve Data symbol
     "BRICEKSP": None,
+    "COST": "COST",
+    "MELI": "MELI",
+    "ICSUSSDP": None,
+    "HOOD": "HOOD",
+    "DIS": "DIS",
+    "BABA": "BABA",
+    "NVDA": "NVDA",
+    "BRK.B": "BRKB",
+    "NFLX": "NFLX",
+    "VUAA": "VUAA.DE",
+    "TSLA": "TSLA",
+    "GOOGL": "GOOGl",
+    "EQQQ": "EQQQ.MI",
+
 }
 
 class MarketDataService:
     def __init__(self) -> None:
         self.provider = TwelveDataProvider()
+        self.yahoo = YahooFinanceProvider()
         self._cache: dict[str, tuple[datetime, MarketQuote]] = {}
         self.ttl = timedelta(minutes=120)  # Cache time-to-live
     
@@ -25,10 +47,14 @@ class MarketDataService:
             raise ValueError(f"No market-data mapping for symbol: {symbol}")
         now = datetime.utcnow()
         cached = self._cache.get(symbol)
+
         if cached:
             cached_at, quote = cached
             if now - cached_at < self.ttl:
                 return quote  # Return cached quote if still valid
+
+        provider_name = self.get_provider_name(resolved_symbol)
+
         quote = self.provider.get_price(resolved_symbol)
         self._cache[symbol] = (now, quote)  # Cache the new quote
         return quote
