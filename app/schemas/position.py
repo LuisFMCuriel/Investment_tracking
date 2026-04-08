@@ -8,3 +8,10 @@ class Position(BaseModel):
     current_price: float
     unrealized_pln: float
     currency: str
+
+class PositionRead(BaseModel):
+    symbol: str
+    currency: str
+    quantity: float
+    average_cost: float
+    total_cost: float
