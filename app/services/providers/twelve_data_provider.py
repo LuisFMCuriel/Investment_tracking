@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any
-
+import random
 import requests
 
 from app.core.config import settings
@@ -16,16 +16,13 @@ class TwelveDataProvider:
         self.api_key = api_key or settings.twelve_data_api_key
         self.timeout = timeout
 
-    def _headers(self) -> dict[str, str]:
-        return {
-            "Authorization": f"apikey {self.api_key}",
-        }
-
     def _get_json(self, endpoint: str, params: dict[str, Any]) -> dict[str, Any]:
+        api_key = random.choice(self.api_key)
+
         response = requests.get(
             f"{self.BASE_URL}/{endpoint}",
             params=params,
-            headers=self._headers(),
+            headers={"Authorization": f"apikey {api_key}"},
             timeout=self.timeout,
         )
         response.raise_for_status()

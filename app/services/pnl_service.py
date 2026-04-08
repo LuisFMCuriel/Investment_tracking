@@ -34,11 +34,11 @@ def get_pnl(db: Session) -> list[PnlRead]:
                     unrealized_pnl_percent=None,
                     price_available=False,
                     price_currency=None,
-                    provider="twelve_data",
+                    provider=None,
                 )
             )
-        continue
-
+            continue
+            
         # Only compute when quote exists
         if not quote.price_available or quote.price is None:
             results.append(
@@ -53,7 +53,7 @@ def get_pnl(db: Session) -> list[PnlRead]:
                     unrealized_pnl=None,
                     unrealized_pnl_percent=None,
                     price_available=False,
-                    price_currency=quote.price_currency,
+                    price_currency=None,
                     provider = quote.provider,
                     )
                 )
@@ -72,7 +72,7 @@ def get_pnl(db: Session) -> list[PnlRead]:
                     unrealized_pnl=None,
                     unrealized_pnl_percent=None,
                     price_available=False,
-                    price_currency=quote.price_currency,
+                    price_currency=None,
                     provider = quote.provider,
                     )
                 )
@@ -99,7 +99,7 @@ def get_pnl(db: Session) -> list[PnlRead]:
                     else None
                 ),
                 price_available=True,
-                price_currency=quote.currency,
+                price_currency=pos.currency,
                 provider=quote.provider,
             )
         )

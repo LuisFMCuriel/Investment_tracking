@@ -21,6 +21,9 @@ SYMBOL_MAP = {
     "GOOGL": "GOOGl",
     "EQQQ": "EQQQ.MI",
     "IWDA": "IWDA.AS",
+    "AAPL": "AAPL",
+    "MSFT": "MSFT",
+    "AMZN": "AMZN",
 
 }
 
@@ -31,7 +34,7 @@ class MarketDataService:
         self._cache: dict[str, tuple[datetime, MarketQuote]] = {}
         self.ttl = timedelta(minutes=120)  # Cache time-to-live
     
-    def resolve_symbol(symbol: str) -> str | None:
+    def resolve_symbol(self, symbol: str) -> str | None:
         if symbol in SYMBOL_MAP:
             return SYMBOL_MAP[symbol]
         return symbol
@@ -53,7 +56,9 @@ class MarketDataService:
         elif currency == "USD":
             quote = self.twelve_data.get_price(resolved_symbol)
         else:
-            print("There is a problem resolving {} with currency {}".format(symbol, currency))
+            raise ValueError(f"Currency not available: {resolved_symbol}, {currency}")
+            #print("There is a problem resolving {} with currency {}".format(symbol, currency))
+            """
             return MarketQuote(
                 symbol =symbol,
                 price=None,
@@ -62,7 +67,7 @@ class MarketDataService:
                 as_of =now,
                 provider=None,
                 price_available=False,
-                )
+                )"""
 
         self._cache[symbol] = (now, quote)  # Cache the new quote
         return quote
