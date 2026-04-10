@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.deps import get_db
@@ -17,7 +17,10 @@ def create_transaction_endpoint(
     transaction_in: TransactionCreate,
     db: Session = Depends(get_db),
 ) -> TransactionRead:
-    transaction = create_transaction(db, transaction_in)
+    try:
+        transaction = create_transaction(db, transaction_in)
+    except ValueError as e:
+        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail=str(e))
     return transaction
 
 @router.get("/transactions", response_model=list[TransactionRead])
