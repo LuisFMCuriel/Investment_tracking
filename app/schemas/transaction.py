@@ -50,7 +50,7 @@ class TransactionBase(BaseModel):
                 raise ValueError("Quantity must be greater than 0 for BUY and SELL transactions")
             if self.price <= 0:
                 raise ValueError("Price must be greater than 0 for BUY and SELL transactions")
-            if self.amount is not None:
+            if self.amount is None:
                 raise ValueError("Amount is required for BUY and SELL transactions")
 
         elif self.transaction_type in cash_types:

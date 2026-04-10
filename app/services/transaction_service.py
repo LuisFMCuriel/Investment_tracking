@@ -34,12 +34,12 @@ def create_transaction(db: Session, transaction_in: TransactionCreate) -> Transa
             raise ValueError("Symbol is required for SELL transactions")
         if transaction_in.quantity is None:
             raise ValueError("Quantity is required for SELL transactions")
-
+        """
         owned_quantity = get_owned_quantity(db, transaction_in.symbol)
         if transaction_in.quantity > owned_quantity:
             raise ValueError(
                 f"Cannot sell {transaction_in.quantity} of {transaction_in.symbol}; only {owned_quantity} available"
-            )
+            )"""
 
     transaction = Transaction(
         symbol=transaction_in.symbol,
