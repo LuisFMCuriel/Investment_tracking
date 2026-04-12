@@ -39,10 +39,10 @@ class PortfolioService:
                         raise ValueError(f"Unsupported currency {pnl.currency} in PnL data")
                 else:
                     if pnl.currency == "EUR":
-                        portfolio["Total_EUR"] += pnl.market_value
+                        portfolio["Total_EUR"] += pnl.total_cost
                         started_eur_with += pnl.total_cost
                     elif pnl.currency == "USD":
-                        portfolio["Total_USD"] += pnl.market_value
+                        portfolio["Total_USD"] += pnl.total_cost
                         started_usd_with += pnl.total_cost
                     else:
                         raise ValueError(f"Unsupported currency {pnl.currency} in PnL data")
