@@ -57,7 +57,9 @@ class TransactionBase(BaseModel):
             if self.amount is None:
                 raise ValueError("Amount is required for DIVIDEND, DEPOSIT, WITHDRAWAL, INTEREST, REWARD, and DISTRIBUTION transactions")
             if self.amount <= 0 and self.transaction_type != TransactionType.WITHDRAWAL:
-                raise ValueError("Amount must be greater than 0 for DIVIDEND, DEPOSIT, WITHDRAWAL, INTEREST, REWARD, and DISTRIBUTION transactions")
+                raise ValueError("Amount must be greater than 0 for DIVIDEND, DEPOSIT, INTEREST, REWARD, and DISTRIBUTION transactions")
+            if self.transaction_type == TransactionType.WITHDRAWAL and (self.amount is None or self.amount >= 0):
+                raise ValueError("Amount is required for WITHDRAWAL transactions and must be less than 0")
             if self.quantity is not None:
                 raise ValueError("Quantity should not be provided for DIVIDEND, DEPOSIT, WITHDRAWAL, INTEREST, REWARD, and DISTRIBUTION transactions")
             if self.transaction_type in {TransactionType.DEPOSIT,
