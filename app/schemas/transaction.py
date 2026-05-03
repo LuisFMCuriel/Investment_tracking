@@ -56,7 +56,7 @@ class TransactionBase(BaseModel):
         elif self.transaction_type in cash_types:
             if self.amount is None:
                 raise ValueError("Amount is required for DIVIDEND, DEPOSIT, WITHDRAWAL, INTEREST, REWARD, and DISTRIBUTION transactions")
-            if self.amount <= 0:
+            if self.amount <= 0 and self.transaction_type != TransactionType.WITHDRAWAL:
                 raise ValueError("Amount must be greater than 0 for DIVIDEND, DEPOSIT, WITHDRAWAL, INTEREST, REWARD, and DISTRIBUTION transactions")
             if self.quantity is not None:
                 raise ValueError("Quantity should not be provided for DIVIDEND, DEPOSIT, WITHDRAWAL, INTEREST, REWARD, and DISTRIBUTION transactions")
